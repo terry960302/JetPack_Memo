@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.Model.MemoModel
+import java.util.*
 
 class MemoAdapter(val context: Context, val list: MutableList<MemoModel>) :
     RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
@@ -39,13 +40,23 @@ class MemoAdapter(val context: Context, val list: MutableList<MemoModel>) :
 
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
 
+        val randomIconList: MutableList<Int> = mutableListOf(
+            R.drawable.ic_dessert,
+            R.drawable.ic_house,
+            R.drawable.ic_tv,
+            R.drawable.ic_winner
+        )
+        val random = Random()
+        val randInt = random.nextInt(randomIconList.size)
+        val randIcon = randomIconList[randInt]
+
         holder.time.text = list[position].time
         holder.desc.text = list[position].desc
 
         if (list[position].thumbnailPath != null) {
             Glide.with(context).load(list[position].thumbnailPath).into(holder.thumbnail)
         } else {
-            holder.thumbnail.setImageResource(R.drawable.ic_color_palette)
+            holder.thumbnail.setImageResource(randIcon)
         }
     }
 }
