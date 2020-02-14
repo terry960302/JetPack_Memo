@@ -5,6 +5,9 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
+        }
         
     }
     dependencies {
@@ -12,6 +15,9 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+        //realm : https://realm.io/kr
+        classpath "io.realm:realm-gradle-plugin:6.0.2"
     }
 }
 
@@ -19,6 +25,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
+        }
         
     }
 }

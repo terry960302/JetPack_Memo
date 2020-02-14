@@ -9,11 +9,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.Model.MemoModel
-import java.util.*
+import com.ritier.my_memo.Util.getRandIcon
 
 class MemoAdapter(val context: Context, val list: MutableList<MemoModel>) :
     RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_main_item, parent, false)
@@ -33,30 +32,29 @@ class MemoAdapter(val context: Context, val list: MutableList<MemoModel>) :
     }
 
     inner class MemoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val thumbnail = itemView.findViewById<ImageView>(R.id.iv_thumbnail)
-        val time = itemView.findViewById<TextView>(R.id.tv_time)
-        val desc = itemView.findViewById<TextView>(R.id.tv_desc)
+        val iv_thumbnail = itemView.findViewById<ImageView>(R.id.iv_thumbnail)
+        val tv_time = itemView.findViewById<TextView>(R.id.tv_time)
+        val tv_desc = itemView.findViewById<TextView>(R.id.tv_desc)
     }
 
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
 
-        val randomIconList: MutableList<Int> = mutableListOf(
-            R.drawable.ic_dessert,
-            R.drawable.ic_house,
-            R.drawable.ic_tv,
-            R.drawable.ic_winner
-        )
-        val random = Random()
-        val randInt = random.nextInt(randomIconList.size)
-        val randIcon = randomIconList[randInt]
+        val id = list[position].id
+        val thumbList = list[position].thumbPathList
+        val time = list[position].time
+        val desc = list[position].desc
 
-        holder.time.text = list[position].time
-        holder.desc.text = list[position].desc
+        //시간 세팅
+        holder.tv_time.text = time
 
-        if (list[position].thumbnailPath != null) {
-            Glide.with(context).load(list[position].thumbnailPath).into(holder.thumbnail)
+        //내용 세팅
+        holder.tv_desc.text = desc
+
+        //썸네일 세팅
+        if (list[position].thumbPathList != null) {
+            Glide.with(context).load(thumbList?.get(0)).into(holder.iv_thumbnail)
         } else {
-            holder.thumbnail.setImageResource(randIcon)
+            holder.iv_thumbnail.setImageResource(getRandIcon())
         }
     }
 }
