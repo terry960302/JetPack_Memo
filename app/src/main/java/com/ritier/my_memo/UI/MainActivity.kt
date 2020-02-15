@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     }
 
    private fun getAllMemo(){
-       memoViewModel.getMemo().observe(this, Observer { memoList ->
+       memoViewModel.getAllMemo().observe(this, Observer { memoList : MutableList<MemoModel> ->
            memoAdapter.setData(memoList)
        })
    }

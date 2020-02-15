@@ -1,6 +1,8 @@
 package com.ritier.my_memo
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +12,13 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.Model.MemoModel
+import com.ritier.my_memo.UI.DetailActivity
 import com.ritier.my_memo.Util.getRandIcon
 
-class MemoAdapter(val context: Context, var list : List<MemoModel>) :
+class MemoAdapter(val context: Context, var list : MutableList<MemoModel>) :
     RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
+
+    val TAG = "MemoAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_main_item, parent, false)
@@ -57,11 +62,15 @@ class MemoAdapter(val context: Context, var list : List<MemoModel>) :
         } else {
             holder.iv_thumbnail.setImageResource(getRandIcon())
         }
+
+        holder.itemView.setOnClickListener {
+            context.startActivity(Intent(context.applicationContext, DetailActivity::class.java))
+        }
     }
 
-    fun setData(memoList : List<MemoModel>){
+    fun setData(memoList : MutableList<MemoModel>){
         this.list = memoList
         notifyDataSetChanged()
-        //TODO : 왜 리사클러뷰에서 바로 UI 업데이트가 되지 않을까?? 스크롤해야만 업데이트가 됨.
+        Log.d(TAG, "메모 데이터가 업데이트 되었습니다.")
     }
 }

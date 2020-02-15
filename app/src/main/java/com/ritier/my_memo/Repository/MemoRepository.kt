@@ -19,8 +19,8 @@ class MemoRepository {
         Realm.setDefaultConfiguration(config)
     }
 
-    fun getMemo()  : LiveData<List<MemoModel>>{
-        val data = MutableLiveData<List<MemoModel>>()
+    fun getAllMemo()  : MutableLiveData<MutableList<MemoModel>>{
+        val data = MutableLiveData<MutableList<MemoModel>>()
 
         realm.beginTransaction()
         val results: RealmResults<MemoModel> = realm.where(MemoModel::class.java).sort("id", Sort.DESCENDING).findAll()
@@ -28,6 +28,15 @@ class MemoRepository {
 
         Log.d(TAG, "가져온 메모들 : $results")
         data.value = results
+        return data
+    }
+
+    fun getOneMemo(id : Int) : MutableLiveData<MemoModel>{
+        val data = MutableLiveData<MemoModel>()
+
+        realm.beginTransaction()
+        val result : MemoModel? = realm.where(MemoModel::class.java).equalTo("id", id).findFirst()
+        //TODO : 데이터 하나만 오는 거 수정하면됨.
         return data
     }
 
