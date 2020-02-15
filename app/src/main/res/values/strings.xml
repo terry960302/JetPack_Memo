@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MyMemo</string>
-    <string name="memoInput">여기를 클릭하십시오.</string>
+    <string name="memoInput">메모를 입력하세요</string>
     <string name="submit">SUBMIT</string>
 </resources>

@@ -6,10 +6,8 @@ import io.realm.annotations.PrimaryKey
 
 open class MemoModel(
     @PrimaryKey
-    var id: Long = 0,
+    var id: Int = 0,
     var thumbPathList: RealmList<String>? = RealmList(),
     var time: String = "",
     var desc: String = ""
-) : RealmObject() {
-//    constructor() : this(0, null, "", "")
-}
+) : RealmObject()

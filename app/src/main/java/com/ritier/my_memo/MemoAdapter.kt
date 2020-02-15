@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.Util.getRandIcon
 
-class MemoAdapter(val context: Context, val list: MutableList<MemoModel>) :
+class MemoAdapter(val context: Context, var list : List<MemoModel>) :
     RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoViewHolder {
@@ -39,7 +40,7 @@ class MemoAdapter(val context: Context, val list: MutableList<MemoModel>) :
 
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
 
-        val id = list[position].id
+//        val id = list[position].id
         val thumbList = list[position].thumbPathList
         val time = list[position].time
         val desc = list[position].desc
@@ -51,10 +52,15 @@ class MemoAdapter(val context: Context, val list: MutableList<MemoModel>) :
         holder.tv_desc.text = desc
 
         //썸네일 세팅
-        if (list[position].thumbPathList != null) {
-            Glide.with(context).load(thumbList?.get(0)).into(holder.iv_thumbnail)
+        if (thumbList != null && thumbList.isNotEmpty()) {
+            Glide.with(context).load(thumbList[0]).into(holder.iv_thumbnail)
         } else {
             holder.iv_thumbnail.setImageResource(getRandIcon())
         }
+    }
+
+    fun setData(memoList : List<MemoModel>){
+        this.list = memoList
+        notifyDataSetChanged()
     }
 }

@@ -1,6 +1,8 @@
 package com.ritier.my_memo.Util
 
+import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
+import io.realm.Realm
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -17,7 +19,12 @@ fun getRandIcon(): Int {
     return randomIconList[randInt]
 }
 
-fun getTime() : String{
-    val  currentTime : Date = Calendar.getInstance().time
+fun getTime(): String {
+    val currentTime: Date = Calendar.getInstance().time
     return SimpleDateFormat("HH : mm", Locale.KOREA).format(currentTime)
+}
+
+fun getRealmLastId(realm: Realm): Int {
+    val primaryKey: Int = (realm.where(MemoModel::class.java).max("id") ?: -1).toInt() + 1
+    return primaryKey
 }
