@@ -20,4 +20,6 @@ class MemoViewModel : ViewModel() {
     fun updateMemo(){
 
     }
+
+    fun dispose() = memoRepository.dispose()
 }

@@ -62,5 +62,6 @@ class MemoAdapter(val context: Context, var list : List<MemoModel>) :
     fun setData(memoList : List<MemoModel>){
         this.list = memoList
         notifyDataSetChanged()
+        //TODO : 왜 리사클러뷰에서 바로 UI 업데이트가 되지 않을까?? 스크롤해야만 업데이트가 됨.
     }
 }

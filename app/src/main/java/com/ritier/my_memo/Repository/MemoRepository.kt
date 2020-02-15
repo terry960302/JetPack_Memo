@@ -46,4 +46,8 @@ class MemoRepository {
     fun updateMemo(memo: MemoModel) {
 
     }
+
+    fun dispose(){
+        realm.close()
+    }
 }

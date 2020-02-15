@@ -1,4 +1,4 @@
-package com.ritier.my_memo.Activity
+package com.ritier.my_memo.UI
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.ritier.my_memo.Model.MemoModel
@@ -39,13 +40,11 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
-    private fun submitMemo(){
+    fun submitMemo(){
         if(!TextUtils.isEmpty(ev_memoInput.text.toString())){
             val realm = Realm.getDefaultInstance()
             val memo = MemoModel(getRealmLastId(realm), null, getTime(), ev_memoInput.text.toString())
-
             memoViewModel.addMemo(memo)
-
             ev_memoInput.text.clear()
             Toast.makeText(applicationContext, "메모가 추가되었습니다.", Toast.LENGTH_SHORT).show()
             finish()
@@ -56,5 +55,10 @@ class AddActivity : AppCompatActivity() {
 
     private  fun addImages() {
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        memoViewModel.dispose()
     }
 }

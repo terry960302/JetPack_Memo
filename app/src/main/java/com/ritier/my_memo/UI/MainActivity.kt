@@ -1,4 +1,4 @@
-package com.ritier.my_memo.Activity
+package com.ritier.my_memo.UI
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -58,4 +58,9 @@ class MainActivity : AppCompatActivity() {
            memoAdapter.setData(memoList)
        })
    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        memoViewModel.dispose()
+    }
 }

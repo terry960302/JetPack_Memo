@@ -20,8 +20,9 @@ fun getRandIcon(): Int {
 }
 
 fun getTime(): String {
-    val currentTime: Date = Calendar.getInstance().time
-    return SimpleDateFormat("HH : mm", Locale.KOREA).format(currentTime)
+    val currentTime: Calendar = Calendar.getInstance()
+    currentTime.add(Calendar.HOUR, 9)
+    return SimpleDateFormat("HH : mm", Locale.KOREA).format(currentTime.time)
 }
 
 fun getRealmLastId(realm: Realm): Int {
