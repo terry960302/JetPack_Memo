@@ -22,6 +22,7 @@ fun getRandIcon(): Int {
 fun getTime(): String {
     val currentTime: Calendar = Calendar.getInstance()
     currentTime.add(Calendar.HOUR, 9)
+    //TODO :  에뮬레이터는 9시간을 더해야하고 핸드폰에 하면 9시간 안더해도 현재 시간이 나옴. 수정필요
     return SimpleDateFormat("HH : mm", Locale.KOREA).format(currentTime.time)
 }
 

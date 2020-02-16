@@ -1,8 +1,11 @@
 package com.ritier.my_memo.UI
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -37,6 +40,13 @@ class AddActivity : AppCompatActivity() {
 
         btn_submit.setOnClickListener{
             submitMemo()
+        }
+
+        lt_image.setOnClickListener {
+            val dialog = ImageDialog(this, null, null, null)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
         }
     }
 

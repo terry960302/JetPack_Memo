@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ritier.my_memo.MemoAdapter
+import com.ritier.my_memo.UI.Adapter.MemoAdapter
 import com.ritier.my_memo.R
 import com.ritier.my_memo.ViewModel.MemoViewModel
 import io.realm.Realm

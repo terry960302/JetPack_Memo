@@ -1,4 +1,4 @@
-package com.ritier.my_memo
+package com.ritier.my_memo.UI.Adapter
 
 import android.content.Context
 import android.content.Intent
@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.Model.MemoModel
+import com.ritier.my_memo.R
 import com.ritier.my_memo.UI.DetailActivity
 import com.ritier.my_memo.Util.getRandIcon
 
