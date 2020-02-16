@@ -15,10 +15,11 @@ import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.UI.DetailActivity
 import com.ritier.my_memo.Util.getRandIcon
 
-class MemoAdapter(val context: Context, var list : MutableList<MemoModel>) :
+class MemoAdapter(val context: Context) :
     RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
 
-    val TAG = "MemoAdapter"
+    private val TAG = "MemoAdapter"
+    private var list = mutableListOf<MemoModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.activity_main_item, parent, false)
@@ -45,7 +46,7 @@ class MemoAdapter(val context: Context, var list : MutableList<MemoModel>) :
 
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
 
-//        val id = list[position].id
+        val id = list[position].id
         val thumbList = list[position].thumbPathList
         val time = list[position].time
         val desc = list[position].desc
@@ -63,14 +64,16 @@ class MemoAdapter(val context: Context, var list : MutableList<MemoModel>) :
             holder.iv_thumbnail.setImageResource(getRandIcon())
         }
 
+        //뷰 클릭
         holder.itemView.setOnClickListener {
-            context.startActivity(Intent(context.applicationContext, DetailActivity::class.java))
+            val intent = Intent(context.applicationContext, DetailActivity::class.java)
+            intent.putExtra("memoId",id)
+            context.startActivity(intent)
         }
     }
-
     fun setData(memoList : MutableList<MemoModel>){
         this.list = memoList
         notifyDataSetChanged()
-        Log.d(TAG, "메모 데이터가 업데이트 되었습니다.")
+        Log.d(TAG, "메모장이 업데이트 되었습니다.")
     }
 }

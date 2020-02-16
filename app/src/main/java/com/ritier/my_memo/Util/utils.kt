@@ -29,3 +29,18 @@ fun getRealmLastId(realm: Realm): Int {
     val primaryKey: Int = (realm.where(MemoModel::class.java).max("id") ?: -1).toInt() + 1
     return primaryKey
 }
+
+//fun setIdString(id: Int): String {
+//    val lastChar = id.toString()[id.toString().length-1].toString()
+//    val lastBeforeChar = id.toString()[id.toString().length-2].toString()
+//    return if (id.toString().length == 2 && lastBeforeChar == "1") {
+//        id.toString() + "th"
+//    } else {
+//        when (lastChar) {
+//            "1" -> id.toString() + "st"
+//            "2" -> id.toString() + "nd"
+//            "3" -> id.toString() + "rd"
+//            else -> id.toString() + "th"
+//        }
+//    }
+//}

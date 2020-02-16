@@ -1,12 +1,12 @@
 package com.ritier.my_memo.Repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ritier.my_memo.Model.MemoModel
+import com.ritier.my_memo.Util.RealmLiveData
+import com.ritier.my_memo.Util.asLiveData
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import io.realm.RealmResults
 import io.realm.Sort
 
 class MemoRepository {
@@ -19,24 +19,17 @@ class MemoRepository {
         Realm.setDefaultConfiguration(config)
     }
 
-    fun getAllMemo()  : MutableLiveData<MutableList<MemoModel>>{
-        val data = MutableLiveData<MutableList<MemoModel>>()
+    fun getAllMemo(): RealmLiveData<MemoModel> =
+        realm.where(MemoModel::class.java).sort("id", Sort.DESCENDING).findAll().asLiveData()
 
-        realm.beginTransaction()
-        val results: RealmResults<MemoModel> = realm.where(MemoModel::class.java).sort("id", Sort.DESCENDING).findAll()
-        realm.commitTransaction()
-
-        Log.d(TAG, "가져온 메모들 : $results")
-        data.value = results
-        return data
-    }
-
-    fun getOneMemo(id : Int) : MutableLiveData<MemoModel>{
+    fun getOneMemo(id: Int): MutableLiveData<MemoModel> {
         val data = MutableLiveData<MemoModel>()
 
         realm.beginTransaction()
-        val result : MemoModel? = realm.where(MemoModel::class.java).equalTo("id", id).findFirst()
-        //TODO : 데이터 하나만 오는 거 수정하면됨.
+        val result: MemoModel? = realm.where(MemoModel::class.java).equalTo("id", id).findFirst()
+        realm.commitTransaction()
+
+        data.value = result
         return data
     }
 
@@ -48,15 +41,20 @@ class MemoRepository {
         Log.d(TAG, "${memo.id}번째 메모를 추가했습니다.")
     }
 
-    fun deleteMemo(id: Long) {
+    fun deleteMemo(id: Int) {
+        realm.beginTransaction()
+        val result: MemoModel? = realm.where(MemoModel::class.java).equalTo("id", id).findFirst()
+        result?.deleteFromRealm()
+        realm.commitTransaction()
 
+        Log.d(TAG, "$id 번째 메모가 삭제되었습니다.")
     }
 
     fun updateMemo(memo: MemoModel) {
 
     }
 
-    fun dispose(){
+    fun dispose() {
         realm.close()
     }
 }

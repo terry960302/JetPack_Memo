@@ -40,7 +40,7 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
-    fun submitMemo(){
+    private fun submitMemo(){
         if(!TextUtils.isEmpty(ev_memoInput.text.toString())){
             val realm = Realm.getDefaultInstance()
             val memo = MemoModel(getRealmLastId(realm), null, getTime(), ev_memoInput.text.toString())
