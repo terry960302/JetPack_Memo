@@ -16,9 +16,9 @@ import com.ritier.my_memo.ViewModel.MemoViewModel
 class DetailActivity : AppCompatActivity() {
 
     lateinit var tv_desc: TextView
-    lateinit var tv_time: TextView
-    lateinit var lt_delete: ConstraintLayout
     lateinit var tv_title: TextView
+    lateinit var lt_delete: ConstraintLayout
+    lateinit var tv_app_bar: TextView
     lateinit var rv_images: RecyclerView
     lateinit var memoViewModel: MemoViewModel
 
@@ -28,17 +28,17 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
 
         tv_desc = findViewById(R.id.tv_memoDesc)
-        tv_time = findViewById(R.id.tv_memoTime)
-        lt_delete = findViewById(R.id.lt_delete)
         tv_title = findViewById(R.id.tv_title)
+        lt_delete = findViewById(R.id.lt_delete)
+        tv_app_bar = findViewById(R.id.tv_app_bar)
         rv_images = findViewById(R.id.rv_images)
         memoViewModel = ViewModelProviders.of(this).get(MemoViewModel::class.java)
 
         //메모 상세 불러오기
         memoViewModel.getOneMemo(getMemoId()).observe(this, Observer {
             tv_desc.text = it.desc
-            tv_time.text = it.time
-            tv_title.text = it.id.toString() + " 번째 MEMO"
+            tv_title.text = it.title
+            tv_app_bar.text = it.id.toString() + "번째 MEMO"
         })
 
         //메모 삭제

@@ -1,29 +1,35 @@
 package com.ritier.my_memo.Util
 
+import android.content.Context
+import android.database.Cursor
+import android.net.Uri
+import android.provider.MediaStore
 import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import io.realm.Realm
-import java.text.SimpleDateFormat
 import java.util.*
 
-fun getRandIcon(): Int {
-    val randomIconList: MutableList<Int> = mutableListOf(
-        R.drawable.ic_dessert,
-        R.drawable.ic_house,
-        R.drawable.ic_tv,
-        R.drawable.ic_winner
+
+fun getRandColor(): Int {
+    val randomColors = listOf<Int>(
+        R.color.randColor1,
+        R.color.randColor2,
+        R.color.randColor3,
+        R.color.randColor4,
+        R.color.randColor5,
+        R.color.randColor6,
+        R.color.randColor7,
+        R.color.randColor8,
+        R.color.randColor9,
+        R.color.randColor10,
+        R.color.randColor11,
+        R.color.randColor12,
+        R.color.randColor13,
+        R.color.randColor14
     )
     val random = Random()
-    val randInt = random.nextInt(randomIconList.size)
-
-    return randomIconList[randInt]
-}
-
-fun getTime(): String {
-    val currentTime: Calendar = Calendar.getInstance()
-    currentTime.add(Calendar.HOUR, 9)
-    //TODO :  에뮬레이터는 9시간을 더해야하고 핸드폰에 하면 9시간 안더해도 현재 시간이 나옴. 수정필요
-    return SimpleDateFormat("HH : mm", Locale.KOREA).format(currentTime.time)
+    val randInt = random.nextInt(randomColors.size)
+    return randomColors.get(randInt)
 }
 
 fun getRealmLastId(realm: Realm): Int {
@@ -31,17 +37,18 @@ fun getRealmLastId(realm: Realm): Int {
     return primaryKey
 }
 
-//fun setIdString(id: Int): String {
-//    val lastChar = id.toString()[id.toString().length-1].toString()
-//    val lastBeforeChar = id.toString()[id.toString().length-2].toString()
-//    return if (id.toString().length == 2 && lastBeforeChar == "1") {
-//        id.toString() + "th"
-//    } else {
-//        when (lastChar) {
-//            "1" -> id.toString() + "st"
-//            "2" -> id.toString() + "nd"
-//            "3" -> id.toString() + "rd"
-//            else -> id.toString() + "th"
-//        }
-//    }
-//}
+fun getRealPathFromUri(context: Context, uri: Uri): String {
+    val filePathColumn =
+        arrayOf(MediaStore.Images.Media.DATA)
+    // Get the cursor
+    val cursor: Cursor? =
+        context.contentResolver.query(uri, filePathColumn, null, null, null)
+    // Move to first row
+    cursor?.moveToFirst()
+    //Get the column index of MediaStore.Images.Media.DATA
+    val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
+    //Gets the String value in the column
+    val imgDecodableString = cursor?.getString(columnIndex!!)
+    cursor?.close()
+    return imgDecodableString!!
+}

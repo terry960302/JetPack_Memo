@@ -1,9 +1,14 @@
 package com.ritier.my_memo.UI
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var memoAdapter: MemoAdapter
     lateinit var rv_memoList: RecyclerView
     lateinit var lt_add: ConstraintLayout
+    val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 11
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +62,40 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun setPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    MY_PERMISSIONS_REQUEST_READ_CONTACTS)
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+        else{
+            Log.d(TAG, "이미 퍼미션이 허용되어 있습니다.")
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         memoViewModel.dispose()
+    }
+
+    override fun onStart() {
+        //TODO : 미디어 접근 퍼미션 얻기
+        setPermission()
+        super.onStart()
     }
 
 }

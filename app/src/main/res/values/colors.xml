@@ -10,4 +10,19 @@
     <color name="deepPurple">#7E6CF6</color>
     <color name="purple">#AC9CFB</color>
     <color name="transparent">#EDEDED</color>
+
+    <color name="randColor1">#55efc4</color>
+    <color name="randColor2">#81ecec</color>
+    <color name="randColor3">#74b9ff</color>
+    <color name="randColor4">#a29bfe</color>
+    <color name="randColor5">#dfe6e9</color>
+    <color name="randColor6">#00b894</color>
+    <color name="randColor7">#00cec9</color>
+    <color name="randColor8">#0984e3</color>
+    <color name="randColor9">#6c5ce7</color>
+    <color name="randColor10">#b2bec3</color>
+    <color name="randColor11">#fdcb6e</color>
+    <color name="randColor12">#e17055</color>
+    <color name="randColor13">#d63031</color>
+    <color name="randColor14">#e84393</color>
 </resources>

@@ -8,6 +8,6 @@ open class MemoModel(
     @PrimaryKey
     var id: Int = 0,
     var thumbPathList: RealmList<String>? = RealmList(),
-    var time: String = "",
+    var title: String = "",
     var desc: String = ""
 ) : RealmObject()

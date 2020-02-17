@@ -8,12 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import com.ritier.my_memo.UI.DetailActivity
-import com.ritier.my_memo.Util.getRandIcon
+import com.ritier.my_memo.Util.getRandColor
 
 class MemoAdapter(val context: Context) :
     RecyclerView.Adapter<MemoAdapter.MemoViewHolder>() {
@@ -39,8 +40,11 @@ class MemoAdapter(val context: Context) :
     }
 
     inner class MemoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cv_id = itemView.findViewById<CardView>(R.id.cv_id)
+        val tv_id = itemView.findViewById<TextView>(R.id.tv_id)
+        val cv_thumbnail = itemView.findViewById<CardView>(R.id.cv_thumbnail)
         val iv_thumbnail = itemView.findViewById<ImageView>(R.id.iv_thumbnail)
-        val tv_time = itemView.findViewById<TextView>(R.id.tv_time)
+        val tv_title = itemView.findViewById<TextView>(R.id.tv_app_bar)
         val tv_desc = itemView.findViewById<TextView>(R.id.tv_desc)
     }
 
@@ -48,20 +52,25 @@ class MemoAdapter(val context: Context) :
 
         val id = list[position].id
         val thumbList = list[position].thumbPathList
-        val time = list[position].time
+        val title = list[position].title
         val desc = list[position].desc
 
-        //시간 세팅
-        holder.tv_time.text = time
+        //아이디
+        holder.tv_id.text = id.toString()
+        holder.cv_id.setCardBackgroundColor(getRandColor())
 
-        //내용 세팅
+        //제목
+        holder.tv_title.text = title
+
+        //내용
         holder.tv_desc.text = desc
 
-        //썸네일 세팅
+        //썸네일
         if (thumbList != null && thumbList.isNotEmpty()) {
             Glide.with(context).load(thumbList[0]).into(holder.iv_thumbnail)
+            holder.cv_thumbnail.visibility = View.VISIBLE
         } else {
-            holder.iv_thumbnail.setImageResource(getRandIcon())
+            holder.cv_thumbnail.visibility = View.GONE
         }
 
         //뷰 클릭
