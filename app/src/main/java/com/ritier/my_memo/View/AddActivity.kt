@@ -118,6 +118,7 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun setImageDialog() {
+        //TODO : 핸드폰 기종마다 다른데 경로를 받아서 하는게, 되는게 있고 안되는게 있음....
         galleryClickListener = View.OnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
