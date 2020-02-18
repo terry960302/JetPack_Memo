@@ -4,4 +4,7 @@
     <string name="submit">SUBMIT</string>
     <string name="add_memo">ADD MEMO</string>
     <string name="load_image">LOAD IMAGE</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

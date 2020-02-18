@@ -1,13 +1,10 @@
-package com.ritier.my_memo.UI
+package com.ritier.my_memo.View.Dialog
 
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ritier.my_memo.R
 

@@ -1,4 +1,4 @@
-package com.ritier.my_memo.UI
+package com.ritier.my_memo.View
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ritier.my_memo.R
+import com.ritier.my_memo.View.Adapter.ImageAdapter
 import com.ritier.my_memo.ViewModel.MemoViewModel
 
 class DetailActivity : AppCompatActivity() {
@@ -20,6 +22,7 @@ class DetailActivity : AppCompatActivity() {
     lateinit var lt_delete: ConstraintLayout
     lateinit var tv_app_bar: TextView
     lateinit var rv_images: RecyclerView
+    lateinit var imageAdapter : ImageAdapter
     lateinit var memoViewModel: MemoViewModel
 
     @SuppressLint("SetTextI18n")
@@ -32,12 +35,16 @@ class DetailActivity : AppCompatActivity() {
         lt_delete = findViewById(R.id.lt_delete)
         tv_app_bar = findViewById(R.id.tv_app_bar)
         rv_images = findViewById(R.id.rv_images)
-        memoViewModel = ViewModelProviders.of(this).get(MemoViewModel::class.java)
+        imageAdapter = ImageAdapter(this@DetailActivity)
+        memoViewModel = ViewModelProviders.of(this@DetailActivity).get(MemoViewModel::class.java)
+
+        initRecyclerView()
 
         //메모 상세 불러오기
         memoViewModel.getOneMemo(getMemoId()).observe(this, Observer {
             tv_desc.text = it.desc
             tv_title.text = it.title
+            imageAdapter.setAllImageData(it.thumbPathList!!.toMutableList())
             tv_app_bar.text = it.id.toString() + "번째 MEMO"
         })
 
@@ -45,8 +52,11 @@ class DetailActivity : AppCompatActivity() {
         lt_delete.setOnClickListener {
             showDialog()
         }
+    }
 
-
+    private fun initRecyclerView(){
+        rv_images.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        rv_images.adapter = imageAdapter
     }
 
     private fun getMemoId(): Int {
