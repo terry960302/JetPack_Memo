@@ -1,6 +1,12 @@
 package com.ritier.my_memo.View.Adapter
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.provider.MediaStore
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +15,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.R
+import com.ritier.my_memo.Util.getBitmapFromBinary
+import com.ritier.my_memo.Util.getBitmapFromUriString
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
+import java.io.FileNotFoundException
 
 class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
+    val TAG = "ImageAdapter"
     val imageList = mutableListOf<String>()
     lateinit var onListItemClickListener: OnListItemClickListener
 
@@ -48,11 +58,9 @@ class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.Ima
 
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        val imagePath = imageList[position]
-
         Glide.with(context)
-            .load(imagePath)
-            .error(R.drawable.broken)
+            .load(getBitmapFromUriString(TAG, context, imageList[position]))
+            .error(R.drawable.ic_broken_image_black_24dp)
             .into(holder.iv_image)
     }
 
@@ -60,8 +68,8 @@ class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.Ima
         this.onListItemClickListener = onListItemClickListener
     }
 
-    fun setAllImageData(imageList: MutableList<String>) {
-        imageList.addAll(imageList)
+    fun setAllImageData(images: MutableList<String>) {
+        imageList.addAll(images)
         notifyDataSetChanged()
     }
 

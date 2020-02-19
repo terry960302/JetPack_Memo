@@ -3,6 +3,7 @@ package com.ritier.my_memo.View
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,15 +18,15 @@ import com.ritier.my_memo.ViewModel.MemoViewModel
 
 class DetailActivity : AppCompatActivity() {
 
+    val TAG = "DetailActivity"
     lateinit var tv_desc: TextView
     lateinit var tv_title: TextView
     lateinit var lt_delete: ConstraintLayout
     lateinit var tv_app_bar: TextView
     lateinit var rv_images: RecyclerView
-    lateinit var imageAdapter : ImageAdapter
+    lateinit var imageAdapter: ImageAdapter
     lateinit var memoViewModel: MemoViewModel
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -39,32 +40,36 @@ class DetailActivity : AppCompatActivity() {
         memoViewModel = ViewModelProviders.of(this@DetailActivity).get(MemoViewModel::class.java)
 
         initRecyclerView()
+        getOneMemo()
 
-        //메모 상세 불러오기
+        //메모 삭제
+        lt_delete.setOnClickListener {
+            showDeleteDialog()
+        }
+    }
+
+    private fun initRecyclerView() {
+        rv_images.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        rv_images.setHasFixedSize(true)
+        rv_images.setItemViewCacheSize(10)
+        rv_images.adapter = imageAdapter
+
+        Log.d(TAG, imageAdapter.imageList.size.toString())
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getOneMemo() {
         memoViewModel.getOneMemo(getMemoId()).observe(this, Observer {
             tv_desc.text = it.desc
             tv_title.text = it.title
             imageAdapter.setAllImageData(it.thumbPathList!!.toMutableList())
             tv_app_bar.text = it.id.toString() + "번째 MEMO"
         })
-
-        //메모 삭제
-        lt_delete.setOnClickListener {
-            showDialog()
-        }
     }
 
-    private fun initRecyclerView(){
-        rv_images.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        rv_images.adapter = imageAdapter
-    }
+    private fun getMemoId(): Int = intent.getIntExtra("memoId", 0)
 
-    private fun getMemoId(): Int {
-        val intent = intent
-        return intent.getIntExtra("memoId", 0)
-    }
-
-    private fun showDialog(){
+    private fun showDeleteDialog() {
         val dialogBuilder = AlertDialog.Builder(this)
         dialogBuilder.setTitle("메모 삭제").setMessage("정말로 삭제하시겠습니까?")
         dialogBuilder.setPositiveButton("네") { dialog, position ->

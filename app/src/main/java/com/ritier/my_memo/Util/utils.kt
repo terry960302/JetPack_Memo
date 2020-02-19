@@ -1,12 +1,18 @@
 package com.ritier.my_memo.Util
 
 import android.content.Context
-import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Base64
+import android.util.Log
 import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import io.realm.Realm
+import java.io.ByteArrayOutputStream
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.util.*
 
 
@@ -37,18 +43,42 @@ fun getRealmLastId(realm: Realm): Int {
     return primaryKey
 }
 
-fun getRealPathFromUri(context: Context, uri: Uri): String {
-    val filePathColumn =
-        arrayOf(MediaStore.Images.Media.DATA)
-    // Get the cursor
-    val cursor: Cursor? =
-        context.contentResolver.query(uri, filePathColumn, null, null, null)
-    // Move to first row
-    cursor?.moveToFirst()
-    //Get the column index of MediaStore.Images.Media.DATA
-    val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
-    //Gets the String value in the column
-    val imgDecodableString = cursor?.getString(columnIndex!!)
-    cursor?.close()
-    return imgDecodableString!!
+//fun getBinaryFromBitmap(imageBitmap: Bitmap): String {
+//    return try {
+//        val byteArrayOutputStream = ByteArrayOutputStream()
+//        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+//        val imageBytes = byteArrayOutputStream.toByteArray()
+//        val bitmapBinary = Base64.encodeToString(imageBytes, Base64.DEFAULT)
+//        bitmapBinary
+//    } catch (e: IOException) {
+//        e.printStackTrace()
+//        ""
+//    }
+//}
+//
+//fun getBitmapFromBinary(imageBinary: String): Bitmap? {
+//    return try {
+//        val imageBytes = Base64.decode(imageBinary, Base64.DEFAULT)
+//        val imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+//        imageBitmap
+//    } catch (e: IOException) {
+//        e.printStackTrace()
+//        null
+//    }
+//}
+
+fun getBitmapFromUriString(TAG: String, context: Context, imageUri: String): Bitmap? {
+    val imageUri = Uri.parse(imageUri)
+
+    return try {
+        MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+    } catch (e: FileNotFoundException) {
+        Log.e(TAG, e.message!!)
+        e.printStackTrace()
+        null
+    } catch (e: IOException) {
+        Log.e(TAG, e.message!!)
+        e.printStackTrace()
+        null
+    }
 }

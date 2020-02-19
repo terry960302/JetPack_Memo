@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
+import com.ritier.my_memo.Util.getBitmapFromUriString
 import com.ritier.my_memo.Util.getRandColor
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
 
@@ -29,6 +30,7 @@ class MemoAdapter(val context: Context) :
         init {
             itemView.setOnClickListener(this)
         }
+
         val cv_id = itemView.findViewById<CardView>(R.id.cv_id)
         val tv_id = itemView.findViewById<TextView>(R.id.tv_id)
         val cv_thumbnail = itemView.findViewById<CardView>(R.id.cv_thumbnail)
@@ -82,19 +84,13 @@ class MemoAdapter(val context: Context) :
 
         //썸네일
         if (thumbList != null && thumbList.isNotEmpty()) {
-            Glide.with(context).load(thumbList[0]).error(R.drawable.broken)
+            Glide.with(context).load(getBitmapFromUriString(TAG, context, thumbList[0]!!))
+                .error(R.drawable.ic_broken_image_black_24dp)
                 .into(holder.iv_thumbnail)
             holder.cv_thumbnail.visibility = View.VISIBLE
         } else {
             holder.cv_thumbnail.visibility = View.GONE
         }
-
-        //뷰 클릭
-//        holder.itemView.setOnClickListener {
-//            val intent = Intent(context.applicationContext, DetailActivity::class.java)
-//            intent.putExtra("memoId",id)
-//            context.startActivity(intent)
-//        }
     }
 
     fun setOnMemoClickListener(onListItemClickListener: OnListItemClickListener) {

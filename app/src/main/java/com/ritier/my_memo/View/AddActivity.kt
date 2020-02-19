@@ -2,10 +2,13 @@ package com.ritier.my_memo.View
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.TextUtils
@@ -22,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
-import com.ritier.my_memo.Util.getRealPathFromUri
 import com.ritier.my_memo.Util.getRealmLastId
 import com.ritier.my_memo.View.Adapter.ImageAdapter
 import com.ritier.my_memo.View.Dialog.ImageDialog
@@ -32,6 +34,7 @@ import io.realm.Realm
 import io.realm.RealmList
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.util.*
 
 class AddActivity : AppCompatActivity() {
 
@@ -46,6 +49,7 @@ class AddActivity : AppCompatActivity() {
     lateinit var galleryClickListener: View.OnClickListener
     lateinit var cameraClickListener: View.OnClickListener
     lateinit var linkClickListener: View.OnClickListener
+    lateinit var cameraImageUri: Uri
 
     val TAG = "AddActivity"
     val RC_GALLERY = 1001
@@ -118,20 +122,27 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun setImageDialog() {
-        //TODO : 핸드폰 기종마다 다른데 경로를 받아서 하는게, 되는게 있고 안되는게 있음....
         galleryClickListener = View.OnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
-            startActivityForResult(intent, RC_GALLERY)
+            //TODO : 구글 포토에서 가져온 이미지의 경우는 보안문제 때문에 경로로 가져오는것에서 에러 터짐.
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(Intent.createChooser(intent, "Select File"), RC_GALLERY)
+            }else{
+                Toast.makeText(this, "구글 포토 보안문제 발생", Toast.LENGTH_SHORT).show()
+            }
             imageSelectDialog.cancel()
         }
 
         cameraClickListener = View.OnClickListener {
-            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-                takePictureIntent.resolveActivity(packageManager)?.also {
-                    startActivityForResult(takePictureIntent, RC_CAMERA)
-                }
-            }
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val imageContent = ContentValues()
+            imageContent.put(MediaStore.Images.Media.TITLE, UUID.randomUUID().toString())
+            imageContent.put(MediaStore.Images.Media.DESCRIPTION, "LINE 메모앱 테스트용 이미지입니다.")
+            cameraImageUri =
+                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageContent)!!
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+            startActivityForResult(intent, RC_CAMERA)
             imageSelectDialog.cancel()
         }
 
@@ -163,10 +174,9 @@ class AddActivity : AppCompatActivity() {
 
         if (requestCode == RC_GALLERY) {
             if (resultCode == Activity.RESULT_OK) {
+                //갤러리는 이미 저장된 이미지이기 때문에 uri가 있음(uri는 파일의 경로)
                 val imageUri = data?.data
-                val imagePath = getRealPathFromUri(applicationContext, imageUri!!)
-
-                imageAdapter.addImage(imagePath)
+                imageAdapter.addImage(imageUri.toString())
             } else {
                 Log.d(TAG, "갤러리에서 이미지를 가져오는 것이 중지되었습니다.")
                 Toast.makeText(this, "갤러리에서 사진 가져오기가 중지되었습니다.", Toast.LENGTH_SHORT).show()
@@ -175,21 +185,9 @@ class AddActivity : AppCompatActivity() {
 
         if (requestCode == RC_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
-                val imageBitmap = data?.extras?.get("data") as Bitmap
-                try {
-                    val byteArrayOutputStream = ByteArrayOutputStream()
-                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-                    val bytes = byteArrayOutputStream.toByteArray()
-                    val bitmapBinary = android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
-                    imageAdapter.addImage(bitmapBinary)
-
-//                    val path = Environment.getExternalStorageDirectory().toString()
-//                    val outputStream = FileOutputStream(UUID.randomUUID().toString())
-//                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-//                    MediaStore.Images.Media.insertImage(contentResolver, )
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+                //카메라의 경우에는 따로 사진첩에 저장하고 그 uri를 받아오는 식으로 구현
+                //내장디비라서 바이너리 자체를 Realm에 저장할 경우 16MB 용량 제한이 있어서 한계가 생김.
+                imageAdapter.addImage(cameraImageUri.toString())
             } else {
                 Log.d(TAG, "카메라에서 이미지 가져오는 것이 중지되었습니다.")
                 Toast.makeText(this, "카메라에서 이미지 가져오는 것이 중지되었습니다.", Toast.LENGTH_SHORT).show()
