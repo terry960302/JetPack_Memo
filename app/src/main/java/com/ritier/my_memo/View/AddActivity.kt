@@ -85,6 +85,8 @@ class AddActivity : AppCompatActivity() {
                 showDeleteDialog(position)
             }
         })
+
+        //TODO : 이미지 리사이클러뷰 부분을 실시간으로 감지하기 위해 ViewModel로 감싸야할지 고려
     }
 
     private fun submitMemo() {

@@ -47,6 +47,11 @@ class MemoRepository {
 
     fun updateMemo(memo: MemoModel) {
         //TODO : 메모 업데이트
+        realm.beginTransaction()
+        realm.copyToRealmOrUpdate(memo)
+        realm.commitTransaction()
+
+        Log.d(TAG, "${memo.id} 번째 메모가 업데이트되었습니다.")
     }
 
     fun dispose() {
