@@ -14,11 +14,6 @@ class MemoRepository {
     val TAG = "MemoRepository"
     val realm: Realm by lazy { Realm.getDefaultInstance() }
 
-    init {
-        val config = RealmConfiguration.Builder().name("memo.realm").build()
-        Realm.setDefaultConfiguration(config)
-    }
-
     fun getAllMemo(): RealmLiveData<MemoModel> =
         realm.where(MemoModel::class.java).sort("id", Sort.DESCENDING).findAll().asLiveData()
 
@@ -51,7 +46,7 @@ class MemoRepository {
     }
 
     fun updateMemo(memo: MemoModel) {
-
+        //TODO : 메모 업데이트
     }
 
     fun dispose() {

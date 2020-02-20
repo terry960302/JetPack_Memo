@@ -1,5 +1,6 @@
 package com.ritier.my_memo.View
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -30,17 +31,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var lt_add: ConstraintLayout
     val RC_PERMISSION = 1234
     val PERMISSIONS = arrayOf(
-        android.Manifest.permission.CAMERA,
-        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.CAMERA,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        Realm.init(applicationContext)
 
         lt_add = findViewById(R.id.lt_add)
         rv_memoList = findViewById(R.id.rv_memoList)
@@ -65,11 +64,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun moveToAddActivity() {
-        val intent = Intent(this@MainActivity, AddActivity::class.java)
-        startActivity(intent)
-    }
-
     private fun initRecyclerView() {
         rv_memoList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rv_memoList.setHasFixedSize(true)
@@ -83,6 +77,17 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun moveToAddActivity() {
+        val intent = Intent(this@MainActivity, AddActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun moveToErrorActivity() {
+        val intent = Intent(this@MainActivity, ErrorActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     fun hasPermissions(context: Context, vararg permissions: String): Boolean = permissions.all {
         ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
     }
@@ -93,12 +98,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             Log.d(TAG, "퍼미션이 모두 허용된 사용자입니다.")
         }
-    }
-
-    private fun moveToErrorActivity() {
-        val intent = Intent(this@MainActivity, ErrorActivity::class.java)
-        startActivity(intent)
-        finish()
     }
 
     override fun onRequestPermissionsResult(
@@ -125,13 +124,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        memoViewModel.dispose()
-    }
-
     override fun onStart() {
-        //TODO : 미디어 접근 퍼미션 얻기
         setPermission()
         super.onStart()
     }

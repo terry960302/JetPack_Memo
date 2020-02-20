@@ -22,5 +22,9 @@ class MemoViewModel : ViewModel() {
     fun updateMemo(){
 
     }
-    fun dispose() = memoRepository.dispose()
+
+    override fun onCleared() {
+        memoRepository.dispose()
+        super.onCleared()
+    }
 }

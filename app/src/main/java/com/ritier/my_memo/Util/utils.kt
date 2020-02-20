@@ -7,6 +7,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import io.realm.Realm
@@ -16,7 +17,10 @@ import java.io.IOException
 import java.util.*
 
 
+val TAG: String by lazy { "Utils" }
+
 fun getRandColor(): Int {
+
     val randomColors = listOf<Int>(
         R.color.randColor1,
         R.color.randColor2,
@@ -35,7 +39,7 @@ fun getRandColor(): Int {
     )
     val random = Random()
     val randInt = random.nextInt(randomColors.size)
-    return randomColors.get(randInt)
+    return randomColors[randInt]
 }
 
 fun getRealmLastId(realm: Realm): Int {
@@ -43,33 +47,31 @@ fun getRealmLastId(realm: Realm): Int {
     return primaryKey
 }
 
-//fun getBinaryFromBitmap(imageBitmap: Bitmap): String {
-//    return try {
-//        val byteArrayOutputStream = ByteArrayOutputStream()
-//        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-//        val imageBytes = byteArrayOutputStream.toByteArray()
-//        val bitmapBinary = Base64.encodeToString(imageBytes, Base64.DEFAULT)
-//        bitmapBinary
-//    } catch (e: IOException) {
-//        e.printStackTrace()
-//        ""
-//    }
-//}
-//
-//fun getBitmapFromBinary(imageBinary: String): Bitmap? {
-//    return try {
-//        val imageBytes = Base64.decode(imageBinary, Base64.DEFAULT)
-//        val imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-//        imageBitmap
-//    } catch (e: IOException) {
-//        e.printStackTrace()
-//        null
-//    }
-//}
+fun getBinaryFromBitmap(imageBitmap: Bitmap): String {
+    return try {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream)
+        val imageBytes = byteArrayOutputStream.toByteArray()
+        val bitmapBinary = Base64.encodeToString(imageBytes, Base64.DEFAULT)
+        bitmapBinary
+    } catch (e: IOException) {
+        e.printStackTrace()
+        ""
+    }
+}
 
-fun getBitmapFromUriString(TAG: String, context: Context, imageUri: String): Bitmap? {
-    val imageUri = Uri.parse(imageUri)
+fun getBitmapFromBinary(imageBinary: String): Bitmap? {
+    return try {
+        val imageBytes = Base64.decode(imageBinary, Base64.DEFAULT)
+        val imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        imageBitmap
+    } catch (e: IOException) {
+        e.printStackTrace()
+        null
+    }
+}
 
+fun getBitmapFromUri(context: Context, imageUri: Uri): Bitmap? {
     return try {
         MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
     } catch (e: FileNotFoundException) {
@@ -80,5 +82,15 @@ fun getBitmapFromUriString(TAG: String, context: Context, imageUri: String): Bit
         Log.e(TAG, e.message!!)
         e.printStackTrace()
         null
+    }
+}
+
+object GlidePlaceHolder {
+    fun circularPlaceHolder(context: Context?): CircularProgressDrawable {
+        val circularProgressDrawable = CircularProgressDrawable(context!!)
+        circularProgressDrawable.centerRadius = 20f
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.start()
+        return circularProgressDrawable
     }
 }

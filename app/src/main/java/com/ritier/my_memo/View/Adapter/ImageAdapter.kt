@@ -10,15 +10,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.R
+import com.ritier.my_memo.Util.GlidePlaceHolder
 import com.ritier.my_memo.Util.getBitmapFromBinary
-import com.ritier.my_memo.Util.getBitmapFromUriString
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
-import java.io.FileNotFoundException
 
 class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
@@ -58,8 +58,11 @@ class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.Ima
 
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
+        val imageString = imageList[position]
+
         Glide.with(context)
-            .load(getBitmapFromUriString(TAG, context, imageList[position]))
+            .load(if (URLUtil.isValidUrl(imageString)) imageString else getBitmapFromBinary(imageList[position]))
+            .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
             .error(R.drawable.ic_broken_image_black_24dp)
             .into(holder.iv_image)
     }

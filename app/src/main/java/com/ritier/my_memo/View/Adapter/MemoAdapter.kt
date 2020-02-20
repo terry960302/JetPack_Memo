@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -12,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
-import com.ritier.my_memo.Util.getBitmapFromUriString
+import com.ritier.my_memo.Util.GlidePlaceHolder
+import com.ritier.my_memo.Util.getBitmapFromBinary
+import com.ritier.my_memo.Util.getBitmapFromUri
 import com.ritier.my_memo.Util.getRandColor
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
 
@@ -68,7 +71,7 @@ class MemoAdapter(val context: Context) :
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
 
         val id = list[position].id
-        val thumbList = list[position].thumbPathList
+        val thumbnailList = list[position].thumbPathList
         val title = list[position].title
         val desc = list[position].desc
 
@@ -83,8 +86,11 @@ class MemoAdapter(val context: Context) :
         holder.tv_desc.text = desc
 
         //썸네일
-        if (thumbList != null && thumbList.isNotEmpty()) {
-            Glide.with(context).load(getBitmapFromUriString(TAG, context, thumbList[0]!!))
+        if (thumbnailList != null && thumbnailList.isNotEmpty()) {
+            val firstImage = thumbnailList[0]
+
+            Glide.with(context).load(if (URLUtil.isValidUrl(firstImage)) firstImage else getBitmapFromBinary(firstImage!!))
+                .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                 .error(R.drawable.ic_broken_image_black_24dp)
                 .into(holder.iv_thumbnail)
             holder.cv_thumbnail.visibility = View.VISIBLE
