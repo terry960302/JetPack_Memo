@@ -17,6 +17,7 @@ import com.ritier.my_memo.R
 import com.ritier.my_memo.View.Adapter.ImageAdapter
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
 import com.ritier.my_memo.ViewModel.MemoViewModel
+import io.realm.RealmResults
 
 class DetailActivity : AppCompatActivity() {
 
@@ -68,12 +69,13 @@ class DetailActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun getOneMemo() {
         memoViewModel.getOneMemo(getMemoId()).observe(this, Observer {
-            tv_desc.text = it.desc
-            tv_title.text = it.title
-            imageAdapter.setAllImageData(it.thumbPathList!!.toMutableList())
-            tv_app_bar.text = it.id.toString() + "번째 MEMO"
+            val memo = it!!.toList()[0]
+            tv_desc.text = memo.desc
+            tv_title.text = memo.title
+            imageAdapter.setAllImageData(memo.thumbPathList!!.toMutableList())
+            tv_app_bar.text = memo.id.toString() + "번째 MEMO"
 
-            if(it.thumbPathList!!.isNotEmpty()){
+            if(memo.thumbPathList!!.isNotEmpty()){
                 tv_noImage.visibility = View.GONE
             }else{
                 tv_noImage.visibility = View.VISIBLE

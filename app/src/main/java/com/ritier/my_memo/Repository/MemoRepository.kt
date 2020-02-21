@@ -1,12 +1,10 @@
 package com.ritier.my_memo.Repository
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.Util.RealmLiveData
 import com.ritier.my_memo.Util.asLiveData
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import io.realm.Sort
 
 class MemoRepository {
@@ -17,16 +15,8 @@ class MemoRepository {
     fun getAllMemo(): RealmLiveData<MemoModel> =
         realm.where(MemoModel::class.java).sort("id", Sort.DESCENDING).findAll().asLiveData()
 
-    fun getOneMemo(id: Int): MutableLiveData<MemoModel> {
-        val data = MutableLiveData<MemoModel>()
-
-        realm.beginTransaction()
-        val result: MemoModel? = realm.where(MemoModel::class.java).equalTo("id", id).findFirst()
-        realm.commitTransaction()
-
-        data.value = result
-        return data
-    }
+    fun getOneMemo(id: Int): RealmLiveData<MemoModel> =
+        realm.where(MemoModel::class.java).equalTo("id", id).findAll().asLiveData()
 
     fun addMemo(memo: MemoModel) {
         realm.beginTransaction()
