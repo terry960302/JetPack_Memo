@@ -13,15 +13,13 @@ class MemoViewModel : ViewModel() {
 
     fun getAllMemo() : RealmLiveData<MemoModel> =  memoRepository.getAllMemo()
 
-    fun getOneMemo(id : Int) : RealmLiveData<MemoModel> = memoRepository.getOneMemo(id)
+    fun getOneMemo(id : Int) : MutableLiveData<MemoModel> = memoRepository.getOneMemo(id)
 
     fun addMemo(memo : MemoModel) = memoRepository.addMemo(memo)
 
     fun deleteMemo(id : Int)= memoRepository.deleteMemo(id)
 
-    fun updateMemo(){
-
-    }
+    fun updateMemo(memo : MemoModel) = memoRepository.updateMemo(memo)
 
     override fun onCleared() {
         memoRepository.dispose()

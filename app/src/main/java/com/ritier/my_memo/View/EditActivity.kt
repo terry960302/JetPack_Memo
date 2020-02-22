@@ -25,17 +25,15 @@ import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import com.ritier.my_memo.Util.getBinaryFromBitmap
 import com.ritier.my_memo.Util.getBitmapFromUri
-import com.ritier.my_memo.Util.getRealmLastId
 import com.ritier.my_memo.View.Adapter.ImageAdapter
 import com.ritier.my_memo.View.Dialog.ImageDialog
 import com.ritier.my_memo.View.Dialog.LinkDialog
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
 import com.ritier.my_memo.ViewModel.MemoViewModel
-import io.realm.Realm
 import io.realm.RealmList
 import java.util.*
 
-class AddActivity : AppCompatActivity() {
+class EditActivity : AppCompatActivity() {
 
     lateinit var memoViewModel: MemoViewModel
     lateinit var lt_image: ConstraintLayout
@@ -45,13 +43,13 @@ class AddActivity : AppCompatActivity() {
     lateinit var rv_imageList: RecyclerView
     lateinit var imageAdapter: ImageAdapter
     lateinit var imageSelectDialog: ImageDialog
-    lateinit var linkDialog : LinkDialog
+    lateinit var linkDialog: LinkDialog
     lateinit var galleryClickListener: View.OnClickListener
     lateinit var cameraClickListener: View.OnClickListener
     lateinit var linkClickListener: View.OnClickListener
     lateinit var cameraImageUri: Uri
 
-    val TAG = "AddActivity"
+    val TAG = "EditActivity"
     val RC_GALLERY = 1001
     val RC_CAMERA = 1002
 
@@ -63,15 +61,17 @@ class AddActivity : AppCompatActivity() {
         ev_title = findViewById(R.id.ev_title)
         ev_desc = findViewById(R.id.ev_desc)
         btn_submit = findViewById(R.id.btn_submit)
+        btn_submit.text = getString(R.string.edit)
         rv_imageList = findViewById(R.id.rv_imageList)
-        imageAdapter = ImageAdapter(this@AddActivity)
-        memoViewModel = ViewModelProviders.of(this@AddActivity).get(MemoViewModel::class.java)
+        imageAdapter = ImageAdapter(this@EditActivity)
+        memoViewModel = ViewModelProviders.of(this@EditActivity).get(MemoViewModel::class.java)
 
+        fetchAlldata()
         initRecyclerView()
         setImageDialog()
 
         btn_submit.setOnClickListener {
-            submitMemo()
+            editMemo()
         }
 
         lt_image.setOnClickListener {
@@ -84,23 +84,33 @@ class AddActivity : AppCompatActivity() {
                 showDeleteDialog(position)
             }
         })
+
     }
 
-    private fun submitMemo() {
+    private fun getMemoId() : Int =  intent.getIntExtra("memoId", 0)
+
+    private fun fetchAlldata() {
+        memoViewModel.getOneMemo(getMemoId()).observe(this, androidx.lifecycle.Observer {
+            ev_title.setText(it.title)
+            ev_desc.setText(it.desc)
+            imageAdapter. setAllImageData(it.thumbPathList!!)
+        })
+    }
+
+    private fun editMemo() {
         if (!TextUtils.isEmpty(ev_desc.text.toString()) && !TextUtils.isEmpty(ev_title.text.toString())) {
-            val realm = Realm.getDefaultInstance()
             val realmImageList = RealmList<String>()
             realmImageList.addAll(imageAdapter.getImages())
             val memo = MemoModel(
-                getRealmLastId(realm),
+                getMemoId(),
                 realmImageList,
                 ev_title.text.toString(),
                 ev_desc.text.toString()
             )
-            memoViewModel.addMemo(memo)
+            memoViewModel.updateMemo(memo)
             ev_desc.text.clear()
             ev_title.text.clear()
-            Toast.makeText(applicationContext, "메모가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "메모가 수정되었습니다.", Toast.LENGTH_SHORT).show()
             finish()
         } else {
             Toast.makeText(applicationContext, "빈칸을 입력해주세요.", Toast.LENGTH_SHORT).show()
@@ -108,7 +118,7 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun showDeleteDialog(position: Int) {
-        val dialogBuilder = AlertDialog.Builder(this@AddActivity)
+        val dialogBuilder = AlertDialog.Builder(this@EditActivity)
         dialogBuilder.setTitle("이미지 삭제").setMessage("정말로 삭제하시겠습니까?")
         dialogBuilder.setPositiveButton("네") { dialog, i ->
             imageAdapter.deleteImage(position)
@@ -142,7 +152,7 @@ class AddActivity : AppCompatActivity() {
 
         linkClickListener = View.OnClickListener {
             imageSelectDialog.cancel()
-            linkDialog = LinkDialog(this@AddActivity, imageAdapter)
+            linkDialog = LinkDialog(this@EditActivity, imageAdapter)
             linkDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             linkDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             linkDialog.show()

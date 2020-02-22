@@ -1,4 +1,4 @@
-package com.ritier.my_memo
+package com.ritier.my_memo.ModelTest
 import com.ritier.my_memo.Model.MemoModel
 import io.realm.RealmList
 import org.junit.After

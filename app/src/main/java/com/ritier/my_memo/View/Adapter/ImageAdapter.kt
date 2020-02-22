@@ -1,12 +1,6 @@
 package com.ritier.my_memo.View.Adapter
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.provider.MediaStore
-import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,12 +50,14 @@ class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.Ima
 
     override fun getItemCount(): Int = imageList.size
 
-
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageString = imageList[position]
 
         Glide.with(context)
-            .load(if (URLUtil.isValidUrl(imageString)) imageString else getBitmapFromBinary(imageList[position]))
+            .load(if (URLUtil.isValidUrl(imageString)) imageString else getBitmapFromBinary(
+                imageList[position]
+            )
+            )
             .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
             .error(R.drawable.ic_broken_image_black_24dp)
             .into(holder.iv_image)
@@ -72,6 +68,7 @@ class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.Ima
     }
 
     fun setAllImageData(images: MutableList<String>) {
+        imageList.clear()
         imageList.addAll(images)
         notifyDataSetChanged()
     }

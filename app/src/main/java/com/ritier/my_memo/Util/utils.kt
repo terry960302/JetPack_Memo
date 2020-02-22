@@ -50,7 +50,7 @@ fun getRealmLastId(realm: Realm): Int {
 fun getBinaryFromBitmap(imageBitmap: Bitmap): String {
     return try {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream)
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream)
         val imageBytes = byteArrayOutputStream.toByteArray()
         val bitmapBinary = Base64.encodeToString(imageBytes, Base64.DEFAULT)
         bitmapBinary

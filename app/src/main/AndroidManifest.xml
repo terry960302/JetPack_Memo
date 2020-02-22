@@ -23,6 +23,7 @@
         <activity android:name=".View.ErrorActivity"/>
         <activity android:name=".View.DetailActivity" />
         <activity android:name=".View.AddActivity" />
+        <activity android:name=".View.EditActivity" />
         <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

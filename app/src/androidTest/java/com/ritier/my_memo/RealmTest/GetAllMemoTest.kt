@@ -1,8 +1,7 @@
-package com.ritier.my_memo
+package com.ritier.my_memo.RealmTest
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ritier.my_memo.Model.MemoModel
-import com.ritier.my_memo.Repository.MemoRepository
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmList
@@ -22,7 +21,7 @@ class GetAllMemoTest {
 
     @Before
     fun setRealm(){
-        RealmTest().setUp()
+        RealmInstanceTest().setUp()
         val testConfig = RealmConfiguration.Builder().inMemory().name("test.realm").build()
         realm = Realm.getInstance(testConfig)
     }
@@ -49,8 +48,6 @@ class GetAllMemoTest {
         realm.copyToRealm(memo2)
         realm.commitTransaction()
     }
-
-
 
     @Test
     fun getAllMemo(){

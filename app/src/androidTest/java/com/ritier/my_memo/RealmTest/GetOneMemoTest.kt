@@ -1,4 +1,4 @@
-package com.ritier.my_memo
+package com.ritier.my_memo.RealmTest
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ritier.my_memo.Model.MemoModel
@@ -18,7 +18,7 @@ class GetOneMemoTest {
 
     @Before
     fun setRealm(){
-        RealmTest().setUp()
+        RealmInstanceTest().setUp()
         val testConfig = RealmConfiguration.Builder().inMemory().name("test.realm").build()
         realm = Realm.getInstance(testConfig)
     }

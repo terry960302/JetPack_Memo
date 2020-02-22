@@ -1,4 +1,4 @@
-package com.ritier.my_memo
+package com.ritier.my_memo.RealmTest
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -13,14 +13,14 @@ import org.junit.runner.RunWith
 import java.lang.Exception
 
 @RunWith(AndroidJUnit4::class)
-class RealmTest {
+class RealmInstanceTest {
 
-    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    val mockContext = InstrumentationRegistry.getInstrumentation().targetContext
     lateinit var mockRealm : Realm
 
     @Before
     fun setUp(){
-        Realm.init(context)
+        Realm.init(mockContext)
         val testConfig = RealmConfiguration.Builder().inMemory().name("test.realm").build()
         Realm.setDefaultConfiguration(testConfig)
         mockRealm = Realm.getDefaultInstance()

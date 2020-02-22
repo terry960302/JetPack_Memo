@@ -50,4 +50,8 @@ class LinkDialog(context: Context, val imageAdapter: ImageAdapter) : Dialog(cont
             }
         }
     }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+    }
 }

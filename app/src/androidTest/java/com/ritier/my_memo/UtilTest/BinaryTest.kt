@@ -1,4 +1,4 @@
-package com.ritier.my_memo
+package com.ritier.my_memo.UtilTest
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -124,13 +124,17 @@ class BinaryTest {
     @Test
     fun testBinaryFromBitmap() {
         print(getBinaryFromBitmap(bitmap!!))
-        Assert.assertEquals(true, getBinaryFromBitmap(bitmap!!).length> 10)
+        Assert.assertEquals(true, getBinaryFromBitmap(
+            bitmap!!
+        ).length> 10)
     }
 
     //용량 압축과 이미지 형식변환 때문에 bitmap과 binary는 같을 수 없음.
     @Test
     fun testBitmapFromBinary(){
-        Assert.assertEquals(true, getBitmapFromBinary(binary) != null)
+        Assert.assertEquals(true, getBitmapFromBinary(
+            binary
+        ) != null)
     }
 
     @After

@@ -15,7 +15,6 @@ import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import com.ritier.my_memo.Util.GlidePlaceHolder
 import com.ritier.my_memo.Util.getBitmapFromBinary
-import com.ritier.my_memo.Util.getBitmapFromUri
 import com.ritier.my_memo.Util.getRandColor
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
 
@@ -68,6 +67,14 @@ class MemoAdapter(val context: Context) :
         super.setHasStableIds(hasStableIds)
     }
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+    }
+
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
 
         val id = list[position].id
@@ -89,7 +96,11 @@ class MemoAdapter(val context: Context) :
         if (thumbnailList != null && thumbnailList.isNotEmpty()) {
             val firstImage = thumbnailList[0]
 
-            Glide.with(context).load(if (URLUtil.isValidUrl(firstImage)) firstImage else getBitmapFromBinary(firstImage!!))
+            Glide.with(context).load(
+                if (URLUtil.isValidUrl(firstImage)) firstImage else getBitmapFromBinary(
+                    firstImage!!
+                )
+            )
                 .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
                 .error(R.drawable.ic_broken_image_black_24dp)
                 .into(holder.iv_thumbnail)

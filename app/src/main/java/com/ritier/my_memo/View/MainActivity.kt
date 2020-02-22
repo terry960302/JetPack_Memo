@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -15,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import com.ritier.my_memo.View.Adapter.MemoAdapter
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var memoAdapter: MemoAdapter
     lateinit var rv_memoList: RecyclerView
     lateinit var lt_add: ConstraintLayout
+    lateinit var tv_noMemo : TextView
     val RC_PERMISSION = 1234
     val PERMISSIONS = arrayOf(
         Manifest.permission.CAMERA,
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         lt_add = findViewById(R.id.lt_add)
         rv_memoList = findViewById(R.id.rv_memoList)
+        tv_noMemo = findViewById(R.id.tv_noMemo)
         memoAdapter = MemoAdapter(this)
         memoViewModel = ViewModelProviders.of(this).get(MemoViewModel::class.java)
 
@@ -74,6 +78,12 @@ class MainActivity : AppCompatActivity() {
     private fun getAllMemo() {
         memoViewModel.getAllMemo().observe(this, Observer {
             memoAdapter.setData(it!!.toMutableList())
+
+            if(it.toMutableList().isNotEmpty()){
+                tv_noMemo.visibility = View.GONE
+            }else{
+                tv_noMemo.visibility = View.VISIBLE
+            }
         })
     }
 
@@ -127,6 +137,11 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         setPermission()
         super.onStart()
+    }
+
+    override fun onDestroy() {
+        rv_memoList.adapter = null
+        super.onDestroy()
     }
 
 }
