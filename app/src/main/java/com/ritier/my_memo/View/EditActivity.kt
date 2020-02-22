@@ -1,5 +1,6 @@
 package com.ritier.my_memo.View
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
@@ -15,6 +16,7 @@ import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -37,6 +39,7 @@ class EditActivity : AppCompatActivity() {
 
     lateinit var memoViewModel: MemoViewModel
     lateinit var lt_image: ConstraintLayout
+    lateinit var tv_app_bar_title : TextView
     lateinit var ev_title: EditText
     lateinit var ev_desc: EditText
     lateinit var btn_submit: Button
@@ -53,11 +56,14 @@ class EditActivity : AppCompatActivity() {
     val RC_GALLERY = 1001
     val RC_CAMERA = 1002
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
 
         lt_image = findViewById(R.id.lt_image)
+        tv_app_bar_title = findViewById(R.id.tv_app_bar)
+        tv_app_bar_title.text = "EDIT MEMO"
         ev_title = findViewById(R.id.ev_title)
         ev_desc = findViewById(R.id.ev_desc)
         btn_submit = findViewById(R.id.btn_submit)

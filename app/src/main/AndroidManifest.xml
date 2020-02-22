@@ -20,9 +20,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.ErrorActivity"/>
+        <activity android:name=".View.ErrorActivity" />
         <activity android:name=".View.DetailActivity" />
-        <activity android:name=".View.AddActivity" />
+        <activity android:name=".View.AddActivity"/>
         <activity android:name=".View.EditActivity" />
         <activity android:name=".View.MainActivity">
             <intent-filter>

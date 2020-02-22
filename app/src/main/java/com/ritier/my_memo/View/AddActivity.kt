@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -34,6 +35,7 @@ import com.ritier.my_memo.ViewModel.MemoViewModel
 import io.realm.Realm
 import io.realm.RealmList
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AddActivity : AppCompatActivity() {
 
@@ -55,9 +57,21 @@ class AddActivity : AppCompatActivity() {
     val RC_GALLERY = 1001
     val RC_CAMERA = 1002
 
+    lateinit var images : MutableList<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
+
+        if(savedInstanceState != null){
+            //TODO : 오리엔테이션 전환시 이미지 리사이클러뷰 날아가는 문제
+            images = savedInstanceState.getStringArrayList("images")!!.toMutableList()
+            imageAdapter = ImageAdapter(this)
+            Log.d(TAG, images.toString())
+            rv_imageList = findViewById(R.id.rv_imageList)
+            imageAdapter.setAllImageData(images)
+            rv_imageList.adapter = imageAdapter
+        }
 
         lt_image = findViewById(R.id.lt_image)
         ev_title = findViewById(R.id.ev_title)
@@ -199,6 +213,10 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putStringArrayList("images", ArrayList(imageAdapter.getImages()))
+        super.onSaveInstanceState(outState)
+    }
     override fun onDestroy() {
         rv_imageList.adapter = null
         super.onDestroy()
