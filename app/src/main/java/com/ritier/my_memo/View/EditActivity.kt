@@ -72,6 +72,8 @@ class EditActivity : AppCompatActivity() {
         imageAdapter = ImageAdapter(this@EditActivity)
         memoViewModel = ViewModelProviders.of(this@EditActivity).get(MemoViewModel::class.java)
 
+        //TODO : AddActivity와 동일하게 ViewModelFactory적용해서 하면 회전시에도 recyclerview 상태 보존가능
+
         fetchAlldata()
         initRecyclerView()
         setImageDialog()

@@ -1,5 +1,6 @@
 package com.ritier.my_memo.View.Adapter
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -20,10 +21,12 @@ class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.Ima
     val imageList = mutableListOf<String>()
     lateinit var onListItemClickListener: OnListItemClickListener
 
-    inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         init {
             itemView.setOnClickListener(this)
         }
+
         val iv_image = itemView.findViewById<ImageView>(R.id.iv_image)
 
         override fun onClick(v: View?) {
@@ -53,10 +56,12 @@ class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.Ima
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageString = imageList[position]
 
-        Glide.with(context)
-            .load(if (URLUtil.isValidUrl(imageString)) imageString else getBitmapFromBinary(
-                imageList[position]
-            )
+        //
+        Glide.with(context.applicationContext)
+            .load(
+                if (URLUtil.isValidUrl(imageString)) imageString else getBitmapFromBinary(
+                    imageList[position]
+                )
             )
             .placeholder(GlidePlaceHolder.circularPlaceHolder(context))
             .error(R.drawable.ic_broken_image_black_24dp)
