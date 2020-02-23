@@ -6,8 +6,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -22,12 +20,14 @@
         android:theme="@style/AppTheme">
         <activity android:name=".View.ErrorActivity" />
         <activity android:name=".View.DetailActivity" />
-        <activity android:name=".View.AddActivity"/>
-        <activity android:name=".View.EditActivity" />
+        <activity android:name=".View.AddActivity"
+            android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".View.EditActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"/>
         <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

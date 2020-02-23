@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import com.ritier.my_memo.View.Adapter.ImageAdapter
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
@@ -34,7 +35,6 @@ class DetailActivity : AppCompatActivity() {
     lateinit var imageAdapter: ImageAdapter
     lateinit var memoViewModel: MemoViewModel
 
-    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -49,9 +49,9 @@ class DetailActivity : AppCompatActivity() {
         imageAdapter = ImageAdapter(this@DetailActivity)
         memoViewModel = ViewModelProviders.of(this@DetailActivity).get(MemoViewModel::class.java)
 
+        getOneMemo()
         setUpMenu()
         initRecyclerView()
-        getOneMemo()
 
         //메뉴 열기
         lt_more.setOnClickListener {

@@ -7,7 +7,7 @@ import io.realm.annotations.PrimaryKey
 open class MemoModel(
     @PrimaryKey
     var id: Int = 0,
-    var thumbPathList: RealmList<String>? = RealmList(),
+    var thumbPathList: RealmList<String>?  = RealmList(),
     var title: String = "",
     var desc: String = ""
 ) : RealmObject()

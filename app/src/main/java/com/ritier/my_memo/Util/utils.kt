@@ -19,29 +19,6 @@ import java.util.*
 
 val TAG: String by lazy { "Utils" }
 
-fun getRandColor(): Int {
-
-    val randomColors = listOf<Int>(
-        R.color.randColor1,
-        R.color.randColor2,
-        R.color.randColor3,
-        R.color.randColor4,
-        R.color.randColor5,
-        R.color.randColor6,
-        R.color.randColor7,
-        R.color.randColor8,
-        R.color.randColor9,
-        R.color.randColor10,
-        R.color.randColor11,
-        R.color.randColor12,
-        R.color.randColor13,
-        R.color.randColor14
-    )
-    val random = Random()
-    val randInt = random.nextInt(randomColors.size)
-    return randomColors[randInt]
-}
-
 fun getRealmLastId(realm: Realm): Int {
     val primaryKey: Int = (realm.where(MemoModel::class.java).max("id") ?: -1).toInt() + 1
     return primaryKey

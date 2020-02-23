@@ -15,7 +15,6 @@ import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import com.ritier.my_memo.Util.GlidePlaceHolder
 import com.ritier.my_memo.Util.getBitmapFromBinary
-import com.ritier.my_memo.Util.getRandColor
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
 
 class MemoAdapter(val context: Context) :
@@ -84,7 +83,6 @@ class MemoAdapter(val context: Context) :
 
         //아이디
         holder.tv_id.text = id.toString()
-        holder.cv_id.setCardBackgroundColor(getRandColor())
 
         //제목
         holder.tv_title.text = title

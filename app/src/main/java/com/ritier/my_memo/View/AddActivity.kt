@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -16,11 +15,9 @@ import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,18 +26,15 @@ import com.ritier.my_memo.R
 import com.ritier.my_memo.Util.getBinaryFromBitmap
 import com.ritier.my_memo.Util.getBitmapFromUri
 import com.ritier.my_memo.Util.getRealmLastId
-import com.ritier.my_memo.View.Adapter.ImageAdapter
 import com.ritier.my_memo.View.Dialog.ImageDialog
 import com.ritier.my_memo.View.Dialog.LinkDialog
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
 import com.ritier.my_memo.ViewModel.ImageViewModel
+import com.ritier.my_memo.ViewModel.ImageViewModelFactory
 import com.ritier.my_memo.ViewModel.MemoViewModel
-import com.ritier.my_memo.ViewModel.ViewModelFactory
 import io.realm.Realm
 import io.realm.RealmList
-import kotlinx.android.synthetic.main.activity_add.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 class AddActivity : AppCompatActivity() {
 
@@ -52,12 +46,12 @@ class AddActivity : AppCompatActivity() {
     lateinit var btn_submit: Button
     lateinit var rv_imageList: RecyclerView
     lateinit var imageSelectDialog: ImageDialog
-    lateinit var linkDialog : LinkDialog
+    lateinit var linkDialog: LinkDialog
     lateinit var galleryClickListener: View.OnClickListener
     lateinit var cameraClickListener: View.OnClickListener
     lateinit var linkClickListener: View.OnClickListener
     lateinit var cameraImageUri: Uri
-    lateinit var viewModelFactory : ViewModelFactory
+    lateinit var imageViewModelFactory: ImageViewModelFactory
 
     val TAG = "AddActivity"
     val RC_GALLERY = 1001
@@ -73,8 +67,9 @@ class AddActivity : AppCompatActivity() {
         btn_submit = findViewById(R.id.btn_submit)
         rv_imageList = findViewById(R.id.rv_imageList)
         memoViewModel = ViewModelProviders.of(this@AddActivity).get(MemoViewModel::class.java)
-        viewModelFactory = ViewModelFactory(this@AddActivity)
-        imageViewModel = ViewModelProviders.of(this, viewModelFactory).get(ImageViewModel::class.java)
+        imageViewModelFactory = ImageViewModelFactory(this@AddActivity)
+        imageViewModel =
+            ViewModelProviders.of(this, imageViewModelFactory).get(ImageViewModel::class.java)
 
         initRecyclerView()
         setImageDialog()
@@ -131,7 +126,7 @@ class AddActivity : AppCompatActivity() {
 
     private fun setImageDialog() {
         galleryClickListener = View.OnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, RC_GALLERY)
             imageSelectDialog.cancel()

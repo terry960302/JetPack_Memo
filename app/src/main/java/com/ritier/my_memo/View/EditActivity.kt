@@ -27,24 +27,26 @@ import com.ritier.my_memo.Model.MemoModel
 import com.ritier.my_memo.R
 import com.ritier.my_memo.Util.getBinaryFromBitmap
 import com.ritier.my_memo.Util.getBitmapFromUri
-import com.ritier.my_memo.View.Adapter.ImageAdapter
 import com.ritier.my_memo.View.Dialog.ImageDialog
 import com.ritier.my_memo.View.Dialog.LinkDialog
 import com.ritier.my_memo.View.Interface.OnListItemClickListener
+import com.ritier.my_memo.ViewModel.ImageViewModel
+import com.ritier.my_memo.ViewModel.ImageViewModelFactory
 import com.ritier.my_memo.ViewModel.MemoViewModel
 import io.realm.RealmList
 import java.util.*
 
 class EditActivity : AppCompatActivity() {
 
+    lateinit var imageViewModelFactory: ImageViewModelFactory
+    lateinit var imageViewModel: ImageViewModel
     lateinit var memoViewModel: MemoViewModel
     lateinit var lt_image: ConstraintLayout
-    lateinit var tv_app_bar_title : TextView
+    lateinit var tv_app_bar_title: TextView
     lateinit var ev_title: EditText
     lateinit var ev_desc: EditText
     lateinit var btn_submit: Button
     lateinit var rv_imageList: RecyclerView
-    lateinit var imageAdapter: ImageAdapter
     lateinit var imageSelectDialog: ImageDialog
     lateinit var linkDialog: LinkDialog
     lateinit var galleryClickListener: View.OnClickListener
@@ -53,8 +55,8 @@ class EditActivity : AppCompatActivity() {
     lateinit var cameraImageUri: Uri
 
     val TAG = "EditActivity"
-    val RC_GALLERY = 1001
-    val RC_CAMERA = 1002
+    val RC_GALLERY = 2001
+    val RC_CAMERA = 2002
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,10 +71,10 @@ class EditActivity : AppCompatActivity() {
         btn_submit = findViewById(R.id.btn_submit)
         btn_submit.text = getString(R.string.edit)
         rv_imageList = findViewById(R.id.rv_imageList)
-        imageAdapter = ImageAdapter(this@EditActivity)
         memoViewModel = ViewModelProviders.of(this@EditActivity).get(MemoViewModel::class.java)
-
-        //TODO : AddActivity와 동일하게 ViewModelFactory적용해서 하면 회전시에도 recyclerview 상태 보존가능
+        imageViewModelFactory = ImageViewModelFactory(this@EditActivity)
+        imageViewModel = ViewModelProviders.of(this@EditActivity, imageViewModelFactory)
+            .get(ImageViewModel::class.java)
 
         fetchAlldata()
         initRecyclerView()
@@ -86,7 +88,7 @@ class EditActivity : AppCompatActivity() {
             imageSelectDialog.show()
         }
 
-        imageAdapter.setOnImageClickListener(object :
+        imageViewModel.imageAdapter.setOnImageClickListener(object :
             OnListItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 showDeleteDialog(position)
@@ -95,20 +97,20 @@ class EditActivity : AppCompatActivity() {
 
     }
 
-    private fun getMemoId() : Int =  intent.getIntExtra("memoId", 0)
+    private fun getMemoId(): Int = intent.getIntExtra("memoId", 0)
 
     private fun fetchAlldata() {
         memoViewModel.getOneMemo(getMemoId()).observe(this, androidx.lifecycle.Observer {
             ev_title.setText(it.title)
             ev_desc.setText(it.desc)
-            imageAdapter. setAllImageData(it.thumbPathList!!)
+            imageViewModel.imageAdapter.setAllImageData(it.thumbPathList!!)
         })
     }
 
     private fun editMemo() {
         if (!TextUtils.isEmpty(ev_desc.text.toString()) && !TextUtils.isEmpty(ev_title.text.toString())) {
             val realmImageList = RealmList<String>()
-            realmImageList.addAll(imageAdapter.getImages())
+            realmImageList.addAll(imageViewModel.imageAdapter.getImages())
             val memo = MemoModel(
                 getMemoId(),
                 realmImageList,
@@ -129,7 +131,7 @@ class EditActivity : AppCompatActivity() {
         val dialogBuilder = AlertDialog.Builder(this@EditActivity)
         dialogBuilder.setTitle("이미지 삭제").setMessage("정말로 삭제하시겠습니까?")
         dialogBuilder.setPositiveButton("네") { dialog, i ->
-            imageAdapter.deleteImage(position)
+            imageViewModel.imageAdapter.deleteImage(position)
             dialog.cancel()
         }.setNegativeButton("아니오") { dialog, i ->
             dialog.cancel()
@@ -140,7 +142,7 @@ class EditActivity : AppCompatActivity() {
 
     private fun setImageDialog() {
         galleryClickListener = View.OnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, RC_GALLERY)
             imageSelectDialog.cancel()
@@ -160,7 +162,7 @@ class EditActivity : AppCompatActivity() {
 
         linkClickListener = View.OnClickListener {
             imageSelectDialog.cancel()
-            linkDialog = LinkDialog(this@EditActivity, imageAdapter)
+            linkDialog = LinkDialog(this@EditActivity, imageViewModel.imageAdapter)
             linkDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             linkDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             linkDialog.show()
@@ -181,7 +183,7 @@ class EditActivity : AppCompatActivity() {
         rv_imageList.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rv_imageList.setHasFixedSize(true)
         rv_imageList.setItemViewCacheSize(10)
-        rv_imageList.adapter = imageAdapter
+        rv_imageList.adapter = imageViewModel.imageAdapter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -194,7 +196,7 @@ class EditActivity : AppCompatActivity() {
                     getBitmapFromUri(this, imageUri!!)
                 val imageBinary =
                     getBinaryFromBitmap(imageBitmap!!)
-                imageAdapter.addImage(imageBinary)
+                imageViewModel.imageAdapter.addImage(imageBinary)
             } else {
                 Log.d(TAG, "갤러리에서 이미지를 가져오는 것이 중지되었습니다.")
                 Toast.makeText(this, "갤러리에서 사진 가져오기가 중지되었습니다.", Toast.LENGTH_SHORT).show()
@@ -209,7 +211,7 @@ class EditActivity : AppCompatActivity() {
                 )
                 val imageBinary =
                     getBinaryFromBitmap(imageBitmap!!)
-                imageAdapter.addImage(imageBinary)
+                imageViewModel.imageAdapter.addImage(imageBinary)
             } else {
                 Log.d(TAG, "카메라에서 이미지 가져오는 것이 중지되었습니다.")
                 Toast.makeText(this, "카메라에서 이미지 가져오는 것이 중지되었습니다.", Toast.LENGTH_SHORT).show()

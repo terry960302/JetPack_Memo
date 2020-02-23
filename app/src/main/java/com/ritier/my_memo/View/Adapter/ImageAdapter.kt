@@ -1,6 +1,5 @@
 package com.ritier.my_memo.View.Adapter
 
-import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -55,8 +54,6 @@ class ImageAdapter(val context: Context) : RecyclerView.Adapter<ImageAdapter.Ima
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageString = imageList[position]
-
-        //
         Glide.with(context.applicationContext)
             .load(
                 if (URLUtil.isValidUrl(imageString)) imageString else getBitmapFromBinary(
