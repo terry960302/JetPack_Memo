@@ -32,7 +32,6 @@ class MemoAdapter(val context: Context) :
             itemView.setOnClickListener(this)
         }
 
-        val cv_id = itemView.findViewById<CardView>(R.id.cv_id)
         val tv_id = itemView.findViewById<TextView>(R.id.tv_id)
         val cv_thumbnail = itemView.findViewById<CardView>(R.id.cv_thumbnail)
         val iv_thumbnail = itemView.findViewById<ImageView>(R.id.iv_thumbnail)

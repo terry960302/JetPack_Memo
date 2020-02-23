@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var rv_memoList: RecyclerView
     lateinit var lt_add: ConstraintLayout
     lateinit var tv_noMemo : TextView
+
     val RC_PERMISSION = 1234
     val PERMISSIONS = arrayOf(
         Manifest.permission.CAMERA,
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         memoViewModel = ViewModelProviders.of(this).get(MemoViewModel::class.java)
 
         initRecyclerView()
-        getAllMemo()
+        getAllMemos()
 
         lt_add.setOnClickListener {
             moveToAddActivity()
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         rv_memoList.adapter = memoAdapter
     }
 
-    private fun getAllMemo() {
+    private fun getAllMemos() {
         memoViewModel.getAllMemo().observe(this, Observer {
             memoAdapter.setData(it!!.toMutableList())
 

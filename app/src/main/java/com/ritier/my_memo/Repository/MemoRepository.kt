@@ -25,7 +25,6 @@ class MemoRepository {
         return data
     }
 
-
     fun addMemo(memo: MemoModel) {
         realm.executeTransactionAsync {
             it.copyToRealm(memo)
